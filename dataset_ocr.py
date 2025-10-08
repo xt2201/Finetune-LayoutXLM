@@ -28,7 +28,8 @@ class LayoutXLMDataset(Dataset):
         image_list_file: str,
         processor,
         max_seq_length: int = 512,
-        use_ocr: bool = True
+        use_ocr: bool = True,
+        num_labels: int = 8
     ):
         """
         Args:
@@ -36,10 +37,12 @@ class LayoutXLMDataset(Dataset):
             processor: LayoutXLMProcessor instance (should have apply_ocr=False)
             max_seq_length: Maximum sequence length
             use_ocr: Whether to use OCR (if False, uses dummy text)
+            num_labels: Number of label classes (for validation)
         """
         self.processor = processor
         self.max_seq_length = max_seq_length
         self.use_ocr = use_ocr
+        self.num_labels = num_labels
         
         # Load image paths
         with open(image_list_file, 'r') as f:
@@ -251,7 +254,14 @@ class LayoutXLMDataset(Dataset):
 
         # Align layout labels to word tokens
         word_labels = self._align_labels_to_words(word_boxes, layout_boxes, layout_labels['labels'])
-        word_labels = [int(label) if isinstance(label, (int, np.integer)) else 0 for label in word_labels]
+        
+        # Validate and clamp labels to valid range [0, num_labels-1]
+        word_labels = [
+            int(label) if isinstance(label, (int, np.integer)) else 0 
+            for label in word_labels
+        ]
+        # Clamp any out-of-range labels
+        word_labels = [min(max(0, label), self.num_labels - 1) for label in word_labels]
         
         # Encode with LayoutXLM processor
         encoding = self.processor(

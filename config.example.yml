@@ -9,16 +9,17 @@ wandb:
 # Model Configuration - Cấu hình về model architecture
 model:
   pretrained_model_name: microsoft/layoutxlm-base    # Model pretrained từ HuggingFace
-  num_labels: 8                                       # Số lượng classes (0-7 = 8 labels)
+  num_labels: 9                                       # Số lượng classes (0-8 = 9 labels)
   id2label:                                          # Mapping từ class ID sang tên class
-    '0': 'O'                                         # Class 0 - Background/Other
-    '1': '1'                                         # Class 1 - Customize theo dataset
-    '2': '2'                                         # Class 2 - Customize theo dataset
-    '3': '3'                                         # Class 3 - Customize theo dataset
-    '4': '4'                                         # Class 4 - Customize theo dataset
-    '5': '5'                                         # Class 5 - Customize theo dataset
-    '6': '6'                                         # Class 6 - Customize theo dataset
-    '7': '7'                                         # Class 7 - Customize theo dataset
+    '0': 'Background'                                # Class 0 - Background/Other (0.31%)
+    '1': 'Title'                                     # Class 1 - Document title (0.71%)
+    '2': 'Subtitle'                                  # Class 2 - Section subtitles (4.36%)
+    '3': 'Header'                                    # Class 3 - Headers/Section headers (13.97%)
+    '4': 'Footer'                                    # Class 4 - Footers/Page numbers (3.93%)
+    '5': 'Text'                                      # Class 5 - Main text/Paragraphs (44.91%)
+    '6': 'List'                                      # Class 6 - Lists/Bullet points (28.11%)
+    '7': 'Table'                                     # Class 7 - Tables (3.57%)
+    '8': 'Figure'                                    # Class 8 - Figures/Images/Charts (0.13%)
 
 # Data Configuration - Cấu hình về dữ liệu training
 data:

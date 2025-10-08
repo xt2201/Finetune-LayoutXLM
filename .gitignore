@@ -69,6 +69,8 @@ logs/
 wandb/
 runs/
 
+doc/
+
 # Detectron2 build artifacts (keep source code, exclude build)
 detectron2/build/
 detectron2/dist/

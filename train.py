@@ -206,8 +206,16 @@ class LayoutXLMTrainer:
                     attention_mask = batch['attention_mask'].to(self.device)
                     image = batch['pixel_values'].to(self.device)  # LayoutXLM uses 'image' parameter
                     labels = batch['labels'].to(self.device)
+                    
+                    # Clamp labels to valid range [0, num_labels-1], ignore padding (-100)
+                    valid_label_mask = labels != -100
+                    labels = torch.where(
+                        valid_label_mask,
+                        torch.clamp(labels, 0, self.model.config.num_labels - 1),
+                        labels
+                    )
 
-                    with torch.cuda.amp.autocast(enabled=use_amp):
+                    with torch.amp.autocast('cuda', enabled=use_amp):
                         outputs = self.model(
                             input_ids=input_ids,
                             bbox=bbox,
@@ -294,27 +302,31 @@ class LayoutXLMTrainer:
         use_ocr = data_config.get('use_ocr', True)
         batch_size = data_config['batch_size']
         num_workers = data_config.get('preprocessing_num_workers', 4)
+        num_labels = self.config['model']['num_labels']
 
         # Create datasets using OCR-enabled pipeline
         self.train_dataset = LayoutXLMDataset(
             data_config['train'],
             processor=self.processor,
             max_seq_length=max_seq_length,
-            use_ocr=use_ocr
+            use_ocr=use_ocr,
+            num_labels=num_labels
         )
 
         self.val_dataset = LayoutXLMDataset(
             data_config['validation'],
             processor=self.processor,
             max_seq_length=max_seq_length,
-            use_ocr=use_ocr
+            use_ocr=use_ocr,
+            num_labels=num_labels
         )
 
         self.test_dataset = LayoutXLMDataset(
             data_config['test'],
             processor=self.processor,
             max_seq_length=max_seq_length,
-            use_ocr=use_ocr
+            use_ocr=use_ocr,
+            num_labels=num_labels
         )
 
         loader_kwargs = dict(

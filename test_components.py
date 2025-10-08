@@ -69,7 +69,8 @@ def test_dataset():
             train_list,
             processor=processor,
             max_seq_length=data_config.get('max_length', 512),
-            use_ocr=False  # disable OCR for quick validation to avoid tesseract dependency
+            use_ocr=False,  # disable OCR for quick validation to avoid tesseract dependency
+            num_labels=config['model']['num_labels']
         )
 
         print(f"✓ Dataset loaded: {len(dataset)} samples")
@@ -103,7 +104,7 @@ def test_model():
         print("  Loading model...")
         model = AutoModelForTokenClassification.from_pretrained(
             "microsoft/layoutxlm-base",
-            num_labels=8
+            num_labels=9  # Updated to match config
         )
         
         print(f"✓ Model loaded successfully")
@@ -128,7 +129,7 @@ def test_forward_pass():
         
         model = AutoModelForTokenClassification.from_pretrained(
             "microsoft/layoutxlm-base",
-            num_labels=8
+            num_labels=9  # Updated to match config
         )
         
         # Create dummy inputs respecting LayoutLMv2 constraints
@@ -201,7 +202,7 @@ def test_utils():
         # Test count_parameters
         model = AutoModelForTokenClassification.from_pretrained(
             "microsoft/layoutxlm-base",
-            num_labels=8
+            num_labels=9  # Updated to 9 classes (0-8)
         )
         params = count_parameters(model)
         assert 'total' in params
