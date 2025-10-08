@@ -1,0 +1,72 @@
+# Weights & Biases Configuration - Theo dõi và logging thí nghiệm
+wandb:
+  api_key: YOUR_WANDB_API_KEY_HERE                   # API key để xác thực với wandb (get from https://wandb.ai/authorize)
+  project: doclayout                                  # Tên project trên wandb
+  # entity: your-username                            # (Optional) Wandb username hoặc team name
+  job_type: train                                     # Loại job: training
+  name: layoutxlm-finetune                           # Tên run, hiển thị trên wandb dashboard
+
+# Model Configuration - Cấu hình về model architecture
+model:
+  pretrained_model_name: microsoft/layoutxlm-base    # Model pretrained từ HuggingFace
+  num_labels: 8                                       # Số lượng classes (0-7 = 8 labels)
+  id2label:                                          # Mapping từ class ID sang tên class
+    '0': 'O'                                         # Class 0 - Background/Other
+    '1': '1'                                         # Class 1 - Customize theo dataset
+    '2': '2'                                         # Class 2 - Customize theo dataset
+    '3': '3'                                         # Class 3 - Customize theo dataset
+    '4': '4'                                         # Class 4 - Customize theo dataset
+    '5': '5'                                         # Class 5 - Customize theo dataset
+    '6': '6'                                         # Class 6 - Customize theo dataset
+    '7': '7'                                         # Class 7 - Customize theo dataset
+
+# Data Configuration - Cấu hình về dữ liệu training
+data:
+  train: data/train.txt                              # File chứa danh sách ảnh training
+  validation: data/val.txt                           # File chứa danh sách ảnh validation
+  test: data/test.txt                                # File chứa danh sách ảnh test
+  use_ocr: true                                      # Sử dụng OCR thực (Tesseract) để extract text và boxes
+  preprocessing_num_workers: 4                       # Số worker cho data preprocessing
+  pad_to_max_length: true                           # Padding sequences về max length
+  batch_size: 8                                      # Batch size (với grad_accum=4 -> effective batch=32)
+  max_length: 512                                    # Maximum sequence length cho tokenizer
+  image_size: [224, 224]                            # Kích thước ảnh input (height, width)
+
+# Training Configuration
+training:
+  num_epochs: 30                                    # Số epochs để train
+  learning_rate: 0.00005                            # Learning rate (5e-5 phù hợp cho LayoutXLM)
+  weight_decay: 0.01                                # Weight decay cho AdamW optimizer
+  warmup_ratio: 0.06                                # Warmup ratio (6% của total steps)
+  gradient_accumulation_steps: 4                    # Gradient accumulation để tăng effective batch size
+  max_grad_norm: 1.0                                # Gradient clipping threshold
+  fp16: false                                       # Mixed precision training (FP16) - set true nếu có GPU hỗ trợ
+  seed: 42                                          # Random seed cho reproducibility
+  early_stopping_patience: 5                        # Dừng sớm nếu val_loss không giảm sau N epochs
+  
+# Optimizer Configuration - Cấu hình optimizer
+optimizer:
+  name: adamw                                       # Tên optimizer: AdamW
+  betas: [0.9, 0.999]                              # Beta parameters cho Adam
+  eps: 0.00000001                                  # Epsilon cho numerical stability (1e-8)
+
+# Scheduler Configuration - Cấu hình learning rate scheduler
+scheduler:
+  name: linear                                      # Loại scheduler: linear decay with warmup
+  num_warmup_steps: null                           # Warmup steps (tính tự động từ warmup_ratio nếu null)
+
+# Checkpoint Configuration - Cấu hình về việc lưu model
+checkpoint:
+  save_dir: checkpoints                            # Thư mục lưu checkpoints
+  save_every_n_epochs: 5                           # Lưu checkpoint mỗi N epochs
+  save_best_only: false                            # Nếu true, chỉ lưu best model
+  metric_for_best_model: eval_loss                 # Metric để đánh giá best model
+  greater_is_better: false                         # eval_loss càng thấp càng tốt
+
+# Logging Configuration - Cấu hình logging
+logging:
+  log_dir: log                                     # Thư mục lưu log files
+  log_level: INFO                                  # Mức độ logging: DEBUG, INFO, WARNING, ERROR
+  log_steps: 100                                   # Log metrics mỗi N steps
+  eval_steps: 500                                  # Evaluate trên val set mỗi N steps
+  save_steps: 500                                  # Lưu checkpoint mỗi N steps

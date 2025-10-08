@@ -1,0 +1,105 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Training artifacts
+checkpoints/
+checkpoints_*/
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# Data - exclude large datasets
+data/train/
+data/val/
+data/test/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Keep data list files only
+!data/*.txt
+
+# Logs
+log/
+logs/
+*.log
+wandb/
+runs/
+
+# Detectron2 build artifacts (keep source code, exclude build)
+detectron2/build/
+detectron2/dist/
+detectron2/*.egg-info/
+detectron2/**/__pycache__/
+detectron2/**/*.pyc
+detectron2/**/*.so
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+temp/
+tmp/
+
+# API keys and secrets
+.env
+.env.local
+*.key
+secrets.yml
+wandb/settings
+config.yml
+
+# Test outputs
+test_output/
+output/
+results/
