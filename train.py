@@ -204,14 +204,14 @@ class LayoutXLMTrainer:
                     input_ids = batch['input_ids'].to(self.device)
                     bbox = batch['bbox'].to(self.device)
                     attention_mask = batch['attention_mask'].to(self.device)
-                    pixel_values = batch['pixel_values'].to(self.device)
+                    image = batch['pixel_values'].to(self.device)  # LayoutXLM uses 'image' parameter
                     labels = batch['labels'].to(self.device)
 
                     with torch.cuda.amp.autocast(enabled=use_amp):
                         outputs = self.model(
                             input_ids=input_ids,
                             bbox=bbox,
-                            pixel_values=pixel_values,
+                            image=image,  # LayoutXLM uses 'image' not 'pixel_values'
                             attention_mask=attention_mask,
                             labels=labels
                         )
@@ -413,13 +413,13 @@ class LayoutXLMTrainer:
                     input_ids = batch['input_ids'].to(self.device)
                     bbox = batch['bbox'].to(self.device)
                     attention_mask = batch['attention_mask'].to(self.device)
-                    pixel_values = batch['pixel_values'].to(self.device)
+                    image = batch['pixel_values'].to(self.device)  # LayoutXLM uses 'image' parameter
                     labels = batch['labels'].to(self.device)
 
                     outputs = self.model(
                         input_ids=input_ids,
                         bbox=bbox,
-                        pixel_values=pixel_values,
+                        image=image,  # LayoutXLM uses 'image' not 'pixel_values'
                         attention_mask=attention_mask,
                         labels=labels
                     )
@@ -479,13 +479,13 @@ class LayoutXLMTrainer:
                     input_ids = batch['input_ids'].to(self.device)
                     bbox = batch['bbox'].to(self.device)
                     attention_mask = batch['attention_mask'].to(self.device)
-                    pixel_values = batch['pixel_values'].to(self.device)
+                    image = batch['pixel_values'].to(self.device)  # LayoutXLM uses 'image' parameter
                     labels = batch['labels'].to(self.device)
 
                     outputs = self.model(
                         input_ids=input_ids,
                         bbox=bbox,
-                        pixel_values=pixel_values,
+                        image=image,  # LayoutXLM uses 'image' not 'pixel_values'
                         attention_mask=attention_mask,
                         labels=labels
                     )
